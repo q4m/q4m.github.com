@@ -1,0 +1,97 @@
+body { 
+    background: #f2f2f2;
+    margin: 0;
+    padding: 0;
+    color: black;
+    font-family: Times, serif;
+    line-height: 1.3em;
+}
+
+#body {
+    background: #fff;
+    border-width: 0 1px;
+    border-color: #ccc;
+    border-style: solid;
+    margin: 0;
+    padding: 0;
+    width: 800px;
+    text-align: justify;
+}
+
+#top { 
+    font-family: Georgia, Tahoma;
+    background: url(top.jpg);
+    border-bottom: 1px solid #ccc;
+    width: 800px;
+    height: 96px;
+    margin: 0 0;
+    padding: 0;
+}
+
+#top h1 {
+    font-size: 50px;
+    margin: 0;
+    padding: 15px 0 0 50px;
+    line-height: 1em;
+}
+
+#top h1 a {
+    color: #fff;
+    text-decoration: none;
+}
+
+#top ul {
+    float: right;
+    margin: 20px 0 0 0;
+    padding: 0 50px 0 0;
+}
+
+#top ul li { 
+    display: inline;
+    font-weight: bold;
+    margin: 0;
+    padding: 0 0 0 1em;
+}
+
+#top ul li a {
+    color: #600;
+}
+
+#breadcrumb {
+    margin: 0;
+    padding: 1em 50px 0 50px;
+    font-weight: bold;    
+}
+
+#main {
+    margin: 0;
+    padding: 0 50px 1em 50px;
+}
+
+#main h2 {
+    border-width: 0 0 1px 0.7em;
+    border-style: solid;
+    border-color: #999;
+    margin: 1.5em 0 1em 0;
+    padding: 0 0.5em;
+}
+
+#main div {
+    margin: 1em 0;
+}
+
+#main pre {
+    border: 1px solid gray;
+    margin: 1em 0;
+    padding: 0.5em;
+    background: #eee;
+}
+
+#footer {
+    border-width: 1px 0;
+    border-style: solid;
+    border-color: #ccc;
+    margin: 1em 0 0 0;
+    padding: 0.5em 50px 2em 50px;
+    text-align: center;
+}

@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+<title>Q4M - Tutorial</title>
+</head>
+<body>
+<center>
+<div id="body">
+<div id="top">
+<ul id="links">
+<li><a href="./">Top</a></li>
+<li><a href="install.html">Install</a></li>
+<li><a href="tutorial.html">Tutorial</a></li>
+<li><a href="http://developer.cybozu.co.jp/kazuho/in_english/" target="_blank">Developer's Blog</a></li>
+</ul>
+<h1><a href="./">Q4M</a></h1>
+</div>
+<div id="breadcrumb">
+<a href="./">Top</a> &gt; Tutorial</div>
+<div id="main">
+
+<h2><a name="create">Creating a Message Queue</a></h2>
+
+<div>
+A Q4M table represents a single queue.  A row of a Q4M table represents a single message.  To create a message queue, use CREATE TABLE statement with the engine name ``queue''.
+
+<pre>
+mysql&gt; CREATE TABLE my_queue (v1 int not null, v2 varchar(255)) ENGINE=queue;
+</pre>
+
+If you need to route messages to more than one subscriber, create table for each of them.  You can create any number of Q4M tables.
+</div>
+
+<h2><a name="send">Sending a Message</a></h2>
+
+<div>
+To send a message, use INSERT statement as you would do on a ordinally SQL table.
+
+<pre>
+mysql&gt; INSERT INTO my_queue (v1, v2) VALUES (3, "hello world!");
+</pre>
+</div>
+
+<h2><a name="subscribe">Subscribing to a Message Queue</a></h2>
+
+<div>
+Queue subscription is controlled by the <i>queue_wait</i> function.  There are two ways to call it.
+</div>
+
+<pre>
+mysql&gt; SELECT * FROM my_queue WHERE queue_wait('my_queue');
++----+--------------+
+| v1 | v2           |
++----+--------------+
+|  3 | hello world! | 
++----+--------------+
+1 row in set (0.00 sec)
+</pre>
+
+<div>
+This is the easiest way of using Q4M.  By calling the <i>queue_wait</i> function in the WHERE clause, only one row at maximum will be returned the the caller (never mix a call to <i>queue_wait</i> with other conditions).  If there was no data ready in the queue table, the SQL statement would block until any data becomes ready, or a timeout occurs.  A new row is returned everytime the statement is executed, while automatically deleteing the previous row that was returned.  After handling certain number of rows, and if you want to exit the process, you should call <i>queue_end()</i> function will delete the row that was returned by the last call to the <i>queue_wait()</i> function.
+</div>
+
+<pre>
+mysql&gt; SELECT queue_end();
+</pre>
+
+<div>
+Technically, Q4M uses two modes to represent a message queue.  In NON-OWNER mode, Q4M tables operate as an ordinally table.  In OWNER mode, only the row <i>owned</i> by the connection becomes visible.  Three functions are used to switch between views, and to block until messages become available.
+</div>
+
+<div style="text-align: center;">
+<img src="q4m-modes.gif" />
+</div>
+
+<div>
+By calling the <i>queue_wait</i> function, Q4M table enters OWNER mode.  Once entering the OWNER mode, only one row (at maximum) becomes SELECTable, exclusively from the connection, i.e. a row owned by a connection becomes invisible to other connections.  When Q4M table is empty, <i>queue_wait</i> function will block until any rows become available.  If the function timeouts, no row will be visible by SELECT queries.
+</div>
+
+<div>
+After handling the row, clients should either call <i>queue_end</i> function or <i>queue_wait</i> function.  The row owned by the connection will be automatically removed from the table.  By calling the <i>queue_end</i> function, the table will return to NON-OWNER mode.  By calling the <i>queue_wait</i> function, a new row to be handled will become available.  When clients fail in handling the row, it should call <i>queue_abort</i> function, that returns the owned-row to the table so that it could be handled by other clients.
+</div>
+
+<div>
+The perl code below is a more formal way of using the queue functions.  Instead of calling <i>queue_wait</i> within a WHERE clause, the code executes the function in a separate query.
+</div>
+
+<pre>
+while (1) {
+  # wait until any data becomes avialable (or timeouts)
+  $dbh->do('select queue_wait("test_table")')
+    or die $dbh->errstr;
+  # receive data (only one row becomes ready at once)
+  if (my @row = $dbh->selectrow_array('select * from test_table')) {
+    # handle the row
+    unless (process_row(@row)) {
+      # if failed, return the row to queue
+      $dbh->do('select queue_abort()')
+        or die $dbh->errstr;
+    }
+  }
+}
+# tidy up
+$dbh->do('select queue_end()')
+  or die $dbh->errstr;
+</pre>
+
+<h2><a name="prioritized_subscription">Prioritized Subscription</a></h2>
+
+<div>As of version 0.3, it is possible to subscribe to multiple tables at once, by passing a list of tables to the <i>queue_wait</i> function.  When any data becomes available, <i>queue_wait</i> function will return the index of the table.  The tables are prioritized from left to right, i.e. if more than one table contain any messages, the index of the leftmost table is returned. If none of the table have any data available, 0 is returned.  In this form of calling the function, timeout should be specified as well.  The example subscribes to two tables with a timeout of 10 seconds.</div>
+
+<pre>
+mysql&gt; SELECT queue_wait('high_priority_table', 'low_priority_table', 10);
+</pre>
+
+<h2><a name="conditional">Conditional Subscription</a></h2>
+
+<div>As of version 0.4, it is possible to subscribe only to the rows that meet certain conditions.  For example, the below call to <i>queue_wait</i> returns only when a row with <i>v&lt;3</i> becomes avialable, or a timeout occurs.</div>
+
+<pre>
+mysql&gt; select queue_wait('table:v<3');
+</pre>
+
+<div>Following operators are currently supported.  Currently, only columns and constants of integral values are supported.  There is yet no support for floating point or string variables.</div>
+
+<pre>
+- ~ ()
+^
+* div % mod
++ -
+&lt;&lt; >>
+&
+|
+= != <= < >= >
+not
+&& and
+xor
+|| or
+</pre>
+
+<h2><a name="relay">Message Relays</a></h2>
+
+<div>
+As of version 0.3, Q4M supports message relaying between different MySQL instances, i.e. messages submitted to a Q4M table can be forwarded to another Q4M table running on a different server.  The transfer is trustable; rowids are used to prevent message losses and/or duplications.
+</div>
+
+<div>
+To run a simple relay, use the <i>q4m-forward</i> script installed into <i>bin</i> subdirectory of the MySQL installation.
+</div>
+
+<pre>
+% /usr/local/mysql51/bin/q4m-forward \
+  "dbi:mysql:database=db1;table=tbl1;user=foo;password=XXX" \
+  "dbi:mysql:database=db2;table=tbl2;host=bar;user=foo"
+</pre>
+
+<div>
+It is also possible to implement a message broker (a relay that changes the format or the destination of messages).  For more information, please refer to the source code of the <i>q4m-forward</i> script.
+</div>
+
+</div>
+<div id="footer">
+Copyright &copy; 2008-2010 <a href="http://labs.cybozu.co.jp/en/">Cybozu Labs, Inc.</a>  All rights reserved.
+</div>
+</div>
+</center>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-177484-14");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>

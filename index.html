@@ -1,1 +1,114 @@
-hello world
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link rel="stylesheet" href="style.css" type="text/css" />
+<title>Q4M - a Message Queue for MySQL</title>
+</head>
+<body>
+<center>
+<div id="body">
+<div id="top">
+<ul id="links">
+<li><a href="./">Top</a></li>
+<li><a href="install.html">Install</a></li>
+<li><a href="tutorial.html">Tutorial</a></li>
+<li><a href="http://developer.cybozu.co.jp/kazuho/in_english/" target="_blank">Developer's Blog</a></li>
+</ul>
+<h1><a href="./">Q4M</a></h1>
+</div>
+<div id="breadcrumb">
+</div>
+<div id="main">
+
+<h2 id="intro">What is Q4M?</h2>
+
+<div>
+Q4M (Queue for MySQL) is a message queue licensed under <a href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html">GPL</a> that works as a pluggable storage engine of <a href="http://dev.mysql.com/" target="_blank">MySQL</a> 5.1, designed to be robust, fast, flexible.  It is already in production quality, and is used by several web services (see <a href="#users">Users of Q4M</a>).
+</div>
+
+<div>
+To start using Q4M, download either a binary or source distribution from the <a href="install.html">install</a> page, and follow the installation instructions.  A small <a href="tutorial.html">tutorial</a> is also avialable.  You may use SQL to access Q4M queues, or there is a wrapper module available for perl (<a href="http://search.cpan.org/~dmaki/Queue-Q4M/" target="_blank">Queue::Q4M</a>).
+</div>
+<div>
+For more information, please read the developer's weblog (<a href="http://labs.cybozu.co.jp/blog/kazuhoatwork/" target="_blank">Kazuho at Work</a>) or subscribe to the <a href="http://groups.google.com/group/q4m-general/">mailing list</a>.
+</div>
+
+<h2 id="whats_new">What's New</h2>
+
+<dl>
+<dt>0.9.4 release (Jun 28 2010)</dt>
+<dd>
+support for <a href="http://developer.cybozu.co.jp/kazuho/2010/03/q4m-093-prerele.html">concurrent compaction</a><br />
+added queue_compact(table_name) function to trigger compaction manually<br />
+stability improvements (see <a href="http://github.com/q4m/q4m/raw/0.9.4/ChangeLog">ChangeLog</a>)
+</dd>
+<dt>0.9 release (Jan 05 2010)</dt>
+<dd>
+fix deadlock issue while performing compaction
+</dd>
+<dt>0.8.9 release (Oct 26 2009)</dt>
+<dd>
+fix memory corruption when FLOAT or DOUBLE fields where used, fix deadlock under some situations calling queue_wait with multiple tables, fix compile error on GCC 4.3, etc.
+</dd>
+<dt>slides at MySQL Conference &amp; Expo 2009 (Apr 22 2009)</dt>
+<dd>
+presentation slides used at <a href="http://www.mysqlconf.com/mysql2009/">MySQL Conference &amp; Expo 2009</a> is available <a href="http://labs.cybozu.co.jp/blog/kazuhoatwork/2009/04/q4m_and_pathtraq_at_mysql_conf.php">here</a>.
+</dd>
+</dl>
+
+<h2 id="design_goals">Design Goals of Q4M</h2>
+
+<dl>
+<dt>Robust</dt>
+<dd>Q4M logs all message transfers to disk.  A power failure or OS crash would never loose a message.</dd>
+<dt>Fast</dt>
+<dd>Although Q4M syncs every operation to disk, it runs fast by using group commits, and checksums for data recovery.  Even with HDD write cache disabled, it is able to transfer thousands of messages per second on an ordinal linux server.</dd>
+<dt>Flexible</dt>
+<dd>Since Q4M works as a storage engine of MySQL, ordinally SQL can be used for administration.  It is also possible to JOIN Q4M queues against other MySQL tables.  Or you may use triggers for sending data into queue.</dd>
+</dl>
+
+<h2 id="users">Users of Q4M</h2>
+
+<div>
+Q4M is used by some of the most popular web services in Japan.  The users include:
+<ul>
+<li><a href="http://www.dena.jp/">DeNA Co., Ltd.</a> - social networking service</a></li>
+<li><a href="http://ficia.com/">Ficia</a> - photo storage service</a></li>
+<li><a href="http://reader.livedoor.com/">livedoor Reader</a> - feed aggregator</a></li>
+<li><a href="http://mixi.co.jp/">mixi, Inc.</a> - social networking service</a></li>
+<li><a href="http://pathtraq.com/">Pathtraq</a> - web traffic statistics service</li>
+</ul>
+</div>
+
+<h2 id="known_issues">Limitations and Known Issues</h2>
+
+<div>
+Limitations, known issues under version 0.5.
+<ul>
+<li>row size is limited to 512MB</li>
+<li>table size is limited to 2**63 bytes</li>
+<li>no support for UPDATE and REPLACE</li>
+<li>no support for indexes</li>
+<li>removal of multiple rows from a single DELETE statement is not atomic</li>
+<li>may cause server crash under extremely low memory condition</li>
+<li>may lose data if OS crashes while Q4M is performing table compaction (since the directory is not fsynced)</li>
+</ul>
+</div>
+
+</div>
+<div id="footer">
+Copyright &copy; 2008-2010 <a href="http://labs.cybozu.co.jp/en/">Cybozu Labs, Inc.</a>  All rights reserved.
+</div>
+</div>
+</center>
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+var pageTracker = _gat._getTracker("UA-177484-14");
+pageTracker._trackPageview();
+</script>
+</body>
+</html>
