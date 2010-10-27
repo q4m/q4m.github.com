@@ -27,14 +27,14 @@
 Precompiled binaries for MySQL running on linux i686, linux x86_64, and Mac OS X 10.4 are provided.  If your MySQL matches the condition, please follow the steps below to install the matching binary distribution.
 <ol>
 <li>determine whether if your MySQL installation was compiled with <i>--with-fast-mutexes</i> option, by looking at <i>CONFIGURE_LINE</i> of <i>bin/mysqlbug</i> script.</li>
-<li>download appropriate binary distribution of Q4M from <a href="http://q4m.31tools.com/dist/">http://q4m.31tools.com/dist/</a>.  If your MySQL installation was compiled with <i>--with-fast-mutexes</i> option, then choose a Q4M archive having <i>with-fast-mutexes</i> within its filename.  Otherwise, choose one with <i>without-fast-mutexes</i>.</li>
+<li>download appropriate binary distribution of Q4M from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a>.  If your MySQL installation was compiled with <i>--with-fast-mutexes</i> option, then choose a Q4M archive having <i>with-fast-mutexes</i> within its filename.  Otherwise, choose one with <i>without-fast-mutexes</i>.</li>
 <li>untar the distribution</li>
 <li>copy <i>support-files/q4m-forward</i> to <i>bin</i> directory of MySQL</li>
   <li>copy <i>libqueue_engine.so</i> to <i>lib/mysql/plugin</i> directory of MySQL (or to <i>lib/plugin</i> directory in case <i>lib/mysql/plugin</i> does not exists)</li>
 <li>run support-files/install.sql</li>
 <li><a href="#test">run the test suite</a></li>
 </ol>
-To FreeBSD users: Q4M is now included in the FreeBSD ports collection (or a binary build compatible with MySQL binary provided by MySQL AB can be downloaded from <a href="http://q4m.31tools.com/dist/">http://q4m.31tools.com/dist/</a>).
+To FreeBSD users: Q4M is now included in the FreeBSD ports collection (or a binary build compatible with MySQL binary provided by MySQL AB can be downloaded from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a>).
 </div>
 
 <h2 id="install-source">Installing from Source</h2>
@@ -43,7 +43,7 @@ To FreeBSD users: Q4M is now included in the FreeBSD ports collection (or a bina
 For installing the source distribution, source code of MySQL is required.
 <ol>
 <li>download and build MySQL 5.1 (installation is not mandatory, but if you plan to install Q4M into a binary distribution of MySQL, make sure to use the same configuration options for building the MySQL source distribution.  The configuration of MySQL can be found in bin/mysqlbug script.)</li>
-<li>download the source distribution of Q4M from <a href="http://q4m.31tools.com/dist/">http://q4m.31tools.com/dist/</a></li>
+<li>download the source distribution of Q4M from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a></li>
 <li>untar the Q4M distribution</li>
 <li>run configure</li>
 <li>run make</li>
@@ -98,7 +98,7 @@ $
 <h2 id="svn">SVN Repository of Q4M</h2>
 
 <div>
-Source repository of Q4M is located at <a href="http://kazuho.31tools.com/svn/q4m/" target="_blank">http://github.com/q4m/q4m/</a>.
+Source repository of Q4M is located at <a href="http://github.com/q4m/q4m/" target="_blank">http://github.com/q4m/q4m/</a>.
 </div>
 
 </div>
