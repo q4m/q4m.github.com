@@ -37,6 +37,11 @@ For more information, please read the developer's weblog (<a href="http://labs.c
 <h2 id="whats_new">What's New</h2>
 
 <dl>
+<dt>0.9.5 release (Feb 25 2011)</dt>
+<dd>
+fix SIGSEGV/SIGBUS on TRUNCATE TABLE<br />
+fix race condition that caused (in rare situation) .Q4M file to reappear after DROP TABLE
+</dd>
 <dt>0.9.4 release (Jun 28 2010)</dt>
 <dd>
 support for <a href="http://developer.cybozu.co.jp/kazuho/2010/03/q4m-093-prerele.html">concurrent compaction</a><br />
