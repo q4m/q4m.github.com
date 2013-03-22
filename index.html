@@ -37,28 +37,14 @@ For more information, please read the developer's weblog (<a href="http://labs.c
 <h2 id="whats_new">What's New</h2>
 
 <dl>
-<dt>0.9.5 release (Feb 25 2011)</dt>
+<dt>0.9.8 release (Mar 22 2013)</dt>
 <dd>
-fix SIGSEGV/SIGBUS on TRUNCATE TABLE<br />
-fix race condition that caused (in rare situation) .Q4M file to reappear after DROP TABLE
+preliminary support for MySQL 5.5 and 5.6<br />
+fix error that may cause the size of the queue file to increase forever
 </dd>
-<dt>0.9.4 release (Jun 28 2010)</dt>
+<dt>0.9.7 release (Nov 21 2012)</dt>
 <dd>
-support for <a href="http://developer.cybozu.co.jp/kazuho/2010/03/q4m-093-prerele.html">concurrent compaction</a><br />
-added queue_compact(table_name) function to trigger compaction manually<br />
-stability improvements (see <a href="http://github.com/q4m/q4m/raw/0.9.4/ChangeLog">ChangeLog</a>)
-</dd>
-<dt>0.9 release (Jan 05 2010)</dt>
-<dd>
-fix deadlock issue while performing compaction
-</dd>
-<dt>0.8.9 release (Oct 26 2009)</dt>
-<dd>
-fix memory corruption when FLOAT or DOUBLE fields where used, fix deadlock under some situations calling queue_wait with multiple tables, fix compile error on GCC 4.3, etc.
-</dd>
-<dt>slides at MySQL Conference &amp; Expo 2009 (Apr 22 2009)</dt>
-<dd>
-presentation slides used at <a href="http://www.mysqlconf.com/mysql2009/">MySQL Conference &amp; Expo 2009</a> is available <a href="http://labs.cybozu.co.jp/blog/kazuhoatwork/2009/04/q4m_and_pathtraq_at_mysql_conf.php">here</a>.
+introduce "queue_stats()" function for per-table metrics
 </dd>
 </dl>
 
