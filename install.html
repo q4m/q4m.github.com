@@ -21,23 +21,22 @@
 <a href="./">Top</a> &gt; Install</div>
 <div id="main">
 
-<h2 id="install-binary">Installing a Binary Distribution</h2>
+<h2 id="install-source">Installing from Source (MySQL 5.5 and later)</h2>
 
 <div>
-Precompiled binaries for MySQL running on linux i686, linux x86_64, and Mac OS X 10.4 are provided.  If your MySQL matches the condition, please follow the steps below to install the matching binary distribution.
+For installing the source distribution, source code of MySQL is required.
 <ol>
-<li>determine whether if your MySQL installation was compiled with <i>--with-fast-mutexes</i> option, by looking at <i>CONFIGURE_LINE</i> of <i>bin/mysqlbug</i> script.</li>
-<li>download appropriate binary distribution of Q4M from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a>.  If your MySQL installation was compiled with <i>--with-fast-mutexes</i> option, then choose a Q4M archive having <i>with-fast-mutexes</i> within its filename.  Otherwise, choose one with <i>without-fast-mutexes</i>.</li>
-<li>untar the distribution</li>
-<li>copy <i>support-files/q4m-forward</i> to <i>bin</i> directory of MySQL</li>
-  <li>copy <i>libqueue_engine.so</i> to <i>lib/mysql/plugin</i> directory of MySQL (or to <i>lib/plugin</i> directory in case <i>lib/mysql/plugin</i> does not exists)</li>
-<li>run support-files/install.sql</li>
-<li><a href="#test">run the test suite</a></li>
+<li>download and untar the source distribution of MySQL</li>
+<li>download the source distribution of Q4M from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a></li>
+<li>untar the Q4M source distribution under the <code>storage/</code> directory of the MySQL source tree, and rename the created directory to <code>q4m</code> (i.e. <code>mv storage/q4m-0.x.y storage/q4m</code>)</li>
+<li>build MySQL (e.g. run CMake with appropriate arguments and then <code>make</code> in the root directory of the MySQL source tree) so that the Q4M plugin (<code>storage/q4m/libqueue_engine.so</code>) would be built as part of the MySQL build process</li>
+<li>copy the plugin into the <code>plugins/</code> directory of the MySQL installation</li>
+<li>run <code>storage/q4m/support-files/install.sql</code> to activate the plugin</li>
+<li>(optionally) <a href="#test">run the test suite</a></li>
 </ol>
-To FreeBSD users: Q4M is now included in the FreeBSD ports collection (or a binary build compatible with MySQL binary provided by MySQL AB can be downloaded from <a href="http://q4m.kazuhooku.com/dist/">http://q4m.kazuhooku.com/dist/</a>).
 </div>
 
-<h2 id="install-source">Installing from Source</h2>
+<h2 id="install-source-51">Installing from Source (MySQL 5.1)</h2>
 
 <div>
 For installing the source distribution, source code of MySQL is required.
@@ -49,7 +48,7 @@ For installing the source distribution, source code of MySQL is required.
 <li>run make</li>
 <li>run make install</li>
 <li>run support-files/install.sql</li>
-<li><a href="#test">run the test suite</a></li>
+<li>(optionally) <a href="#test">run the test suite</a></li>
 </ol>
 Below are the important options when configuring Q4M.
 <dl>
