@@ -37,6 +37,10 @@ For more information, please read the developer's weblog (<a href="http://labs.c
 <h2 id="whats_new">What's New</h2>
 
 <dl>
+<dt>0.9.14 release (Jul 30 2014)</dt>
+<dd>
+fix race condition between DELETE and queue_wait() that may cause crash in case compaction is triggered
+</dd>
 <dt>0.9.13 release (Feb 6 2014)</dt>
 <dd>
 fix deadlock when using multi-table queue_wait on MySQL 5.1
