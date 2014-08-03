@@ -46,11 +46,19 @@ mysql&gt; INSERT INTO my_queue (v1, v2) VALUES (3, "hello world!");
 <h2><a name="subscribe">Subscribing to a Message Queue</a></h2>
 
 <div>
-Queue subscription is controlled by the <i>queue_wait</i> function.  There are two ways to call it.
+Queue subscription is controlled by the <i>queue_wait</i> function.
 </div>
 
 <pre>
-mysql&gt; SELECT * FROM my_queue WHERE queue_wait('my_queue');
+mysql&gt; SELECT queue_wait('my_queue');
++------------------------+
+| queue_wait('my_queue') |
++------------------------+
++                      1 |
++------------------------+
+1 row in set (0.00 sec)
+
+mysql&gt; SELECT * FROM my_queue;
 +----+--------------+
 | v1 | v2           |
 +----+--------------+
@@ -60,7 +68,7 @@ mysql&gt; SELECT * FROM my_queue WHERE queue_wait('my_queue');
 </pre>
 
 <div>
-This is the easiest way of using Q4M.  By calling the <i>queue_wait</i> function in the WHERE clause, only one row at maximum will be returned the the caller (never mix a call to <i>queue_wait</i> with other conditions).  If there was no data ready in the queue table, the SQL statement would block until any data becomes ready, or a timeout occurs.  A new row is returned everytime the statement is executed, while automatically deleteing the previous row that was returned.  After handling certain number of rows, and if you want to exit the process, you should call <i>queue_end()</i> function will delete the row that was returned by the last call to the <i>queue_wait()</i> function.
+After calling the <i>queue_wait</i> function, only one row at maximum will be returned by succeeding SELECT queries against the table specified by the function (never mix a call to <i>queue_wait</i> with other conditions).  If there was no data ready in the queue table, the function would block until any data becomes ready, or a timeout occurs.  A new row (if any) is returned everytime the function is being called, automatically deleting the previous row that was previously returned.  After handling certain number of rows, and if you want to exit the process, you should call <i>queue_end()</i> function will delete the row that was returned by the last call to the <i>queue_wait()</i> function.
 </div>
 
 <pre>
@@ -84,7 +92,7 @@ After handling the row, clients should either call <i>queue_end</i> function or 
 </div>
 
 <div>
-The perl code below is a more formal way of using the queue functions.  Instead of calling <i>queue_wait</i> within a WHERE clause, the code executes the function in a separate query.
+The Perl code below is a more formal way of using the queue functions.
 </div>
 
 <pre>
